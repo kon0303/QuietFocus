@@ -1,0 +1,36 @@
+"""QuietFocus visual theme."""
+
+from __future__ import annotations
+
+BG = "#F3F6F5"
+CARD = "#FFFFFF"
+CARD_HEADER = "#FAFCFB"
+TEXT = "#17231F"
+SUBTEXT = "#687873"
+FAINT = "#92A09B"
+BORDER = "#E5ECE9"
+BORDER_STRONG = "#D4DFDB"
+ACCENT = "#0E9F8A"
+ACCENT_DARK = "#08796C"
+ACCENT_SOFT = "#E8F7F3"
+ACCENT_SOFT_2 = "#D9F1EB"
+HOVER = "#F7FAF9"
+FOREGROUND_BG = "#E8F8F1"
+FOREGROUND_FG = "#087A55"
+BACKGROUND_BG = "#FFF3E4"
+BACKGROUND_FG = "#995A00"
+IDLE_BG = "#F1F4F3"
+IDLE_FG = "#75847F"
+MUTED_FG = "#9A5C13"
+DANGER = "#C34A3A"
+DANGER_BG = "#FDEDEA"
+WHITE = "#FFFFFF"
+TOAST_BG = "#20312C"
+
+FONT_CANDIDATES = (
+    "Microsoft YaHei UI",
+    "微软雅黑",
+    "Microsoft YaHei",
+    "Segoe UI",
+    "Arial",
+)
