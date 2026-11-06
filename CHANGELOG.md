@@ -2,13 +2,32 @@
 
 All notable changes to QuietFocus are documented here.
 
+## [1.0.2] - 2026-11-07
+
+### Fixed
+
+- Pressing `Win` and opening the Start menu, or opening Windows Search, now
+  counts as leaving the current application and mutes controlled apps. Tray
+  overflow and quick-settings flyouts remain ignored so opening the hidden-icon
+  panel does not silence the current app.
+- Exiting QuietFocus now restores default sound by unmuting every session it
+  controlled, including sessions that were already muted before being
+  controlled. The old original-mute restoration can be selected with the
+  "退出时恢复默认声音" setting.
+- The tray menu now explicitly says "退出并恢复声音".
+
+### Added
+
+- `restore_on_exit` setting (default: on).
+- Unit coverage for Start-menu foreground handling and forced unmute on exit.
+
 ## [1.0.1] - 2026-11-03
 
 ### Fixed
 
-- Opening the Windows hidden-icon overflow, taskbar, Start menu, IME, or the
-  QuietFocus window itself no longer makes the previously active application
-  look like it moved to the background.
+- Opening the Windows hidden-icon overflow, taskbar, IME, or the QuietFocus
+  window itself no longer makes the previously active application look like it
+  moved to the background.
 - QuietFocus now waits for a real foreground application before changing any
   mute state at startup.
 - Launching `QuietFocus.exe` again now brings the existing hidden window to the

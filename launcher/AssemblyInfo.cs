@@ -5,5 +5,5 @@ using System.Reflection;
 [assembly: AssemblyCompany("QuietFocus")]
 [assembly: AssemblyProduct("QuietFocus")]
 [assembly: AssemblyCopyright("Copyright (c) 2026 QuietFocus")]
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.0")]
+[assembly: AssemblyFileVersion("1.0.2.0")]

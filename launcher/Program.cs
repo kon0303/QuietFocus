@@ -11,7 +11,7 @@ namespace QuietFocusLauncher
 {
     internal static class Program
     {
-        private const string BundleVersion = "1.0.1";
+        private const string BundleVersion = "1.0.2";
         private const string PayloadResource = "payload.zip";
 
         [STAThread]

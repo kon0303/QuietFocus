@@ -157,6 +157,7 @@ class AudioController:
         on_snapshot: Callable[[EngineSnapshot], None],
         session_provider: Callable[[], Sequence[object]] = AudioUtilities.GetAllSessions,
         foreground_provider: Callable[[], ForegroundContext | None] = get_foreground_context,
+        get_restore_on_exit: Callable[[], bool] = lambda: True,
     ) -> None:
         self._get_selected = get_selected
         self._get_enabled = get_enabled
@@ -164,6 +165,7 @@ class AudioController:
         self._on_snapshot = on_snapshot
         self._session_provider = session_provider
         self._foreground_provider = foreground_provider
+        self._get_restore_on_exit = get_restore_on_exit
 
         self._stop = threading.Event()
         self._wake = threading.Event()
@@ -483,12 +485,23 @@ class AudioController:
             return False
 
     # --------------------------------------------------------------- restore
+    def _restore_default_enabled(self) -> bool:
+        try:
+            return bool(self._get_restore_on_exit())
+        except Exception:
+            return True
+
     def _recover_from_journal(self) -> None:
         """Undo mutes left behind by a previous crash or forced kill."""
         baseline = self._journal.load()
         if not baseline:
             return
-        log.info("Found %d sessions in the restore journal", len(baseline))
+        force_unmute = self._restore_default_enabled()
+        log.info(
+            "Found %d sessions in the restore journal (force_unmute=%s)",
+            len(baseline),
+            force_unmute,
+        )
         try:
             raw_sessions = list(self._session_provider())
         except Exception as exc:
@@ -505,7 +518,8 @@ class AudioController:
                 sid = instance or f"{pid}:{getattr(raw, 'Identifier', '')}"
                 if sid not in remaining:
                     continue
-                raw.SimpleAudioVolume.SetMute(1 if remaining[sid] else 0, None)
+                target_muted = False if force_unmute else remaining[sid]
+                raw.SimpleAudioVolume.SetMute(1 if target_muted else 0, None)
                 remaining.pop(sid, None)
             except Exception as exc:
                 failed += 1
@@ -522,7 +536,12 @@ class AudioController:
         if not baseline:
             self._journal.clear()
             return
-        log.info("Restoring %d audio sessions", len(baseline))
+        force_unmute = self._restore_default_enabled()
+        log.info(
+            "Restoring %d audio sessions (force_unmute=%s)",
+            len(baseline),
+            force_unmute,
+        )
         try:
             raw_sessions = list(self._session_provider())
         except Exception as exc:
@@ -540,7 +559,8 @@ class AudioController:
                 sid = instance or f"{pid}:{getattr(raw, 'Identifier', '')}"
                 if sid not in remaining:
                     continue
-                raw.SimpleAudioVolume.SetMute(1 if remaining[sid] else 0, None)
+                target_muted = False if force_unmute else remaining[sid]
+                raw.SimpleAudioVolume.SetMute(1 if target_muted else 0, None)
                 remaining.pop(sid, None)
             except Exception as exc:
                 failed += 1

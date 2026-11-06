@@ -27,6 +27,7 @@ class SettingsTests(unittest.TestCase):
         self.assertTrue(settings.is_new)
         self.assertTrue(settings.enabled)
         self.assertTrue(settings.auto_select_new)
+        self.assertTrue(settings.restore_on_exit)
         self.assertEqual(settings.selected_keys(), set())
 
     def test_unselected_is_ignored_and_persisted(self):
@@ -78,6 +79,12 @@ class SettingsTests(unittest.TestCase):
         settings.set_auto_select_new(False)
         reloaded = Settings(self.path)
         self.assertFalse(reloaded.auto_select_new)
+
+    def test_restore_on_exit_persists(self):
+        settings = Settings(self.path)
+        settings.set_restore_on_exit(False)
+        reloaded = Settings(self.path)
+        self.assertFalse(reloaded.restore_on_exit)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest import mock
 
 from quietfocus.audio import AudioController
-from quietfocus.foreground import ForegroundContext
+from quietfocus.foreground import ForegroundContext, _is_transient_surface
 
 EXE = r"C:\Fake\Music.exe"
 KEY = "path:" + os.path.normcase(EXE)
@@ -98,6 +98,7 @@ class AudioControllerTests(unittest.TestCase):
 
         self.selected: set[str] = {KEY}
         self.enabled = True
+        self.restore_on_exit = True
         self.session = FakeSession("session-1", 100)
         self.foreground = FakeForeground(200, r"C:\Fake\Other.exe", "Other.exe")
         self.snapshot = None
@@ -118,6 +119,7 @@ class AudioControllerTests(unittest.TestCase):
             on_snapshot=lambda snap: setattr(self, "snapshot", snap),
             session_provider=lambda: list(sessions),
             foreground_provider=lambda: (foreground or self.foreground)(),
+            get_restore_on_exit=lambda: self.restore_on_exit,
         )
         return self.controller
 
@@ -233,6 +235,41 @@ class AudioControllerTests(unittest.TestCase):
         self.assertFalse(self.session.SimpleAudioVolume.muted)
         self.assertTrue(snapshot.apps[0].selected)
         self.assertFalse(snapshot.apps[0].controlled)
+
+    def test_start_menu_is_not_a_transient_surface(self):
+        # Opening Start/Search means the previous app is no longer foreground.
+        self.assertFalse(
+            _is_transient_surface(
+                "Windows.UI.Core.CoreWindow", "StartMenuExperienceHost.exe"
+            )
+        )
+        self.assertFalse(
+            _is_transient_surface("Windows.UI.Core.CoreWindow", "SearchHost.exe")
+        )
+        # The tray overflow remains transient so clicking hidden icons does not
+        # silence the app the user was actually using.
+        self.assertTrue(_is_transient_surface("Shell_TrayWnd", "explorer.exe"))
+        self.assertTrue(
+            _is_transient_surface(
+                "Windows.UI.Core.CoreWindow", "TextInputHost.exe"
+            )
+        )
+
+    def test_exit_force_unmutes_even_if_app_was_already_muted(self):
+        self.session.SimpleAudioVolume.muted = True
+        self.make([self.session])
+        self.controller.scan_once()
+        self.assertTrue(self.session.SimpleAudioVolume.muted)
+        self.controller._restore_all()
+        self.assertFalse(self.session.SimpleAudioVolume.muted)
+
+    def test_exit_can_restore_original_mute_when_disabled(self):
+        self.session.SimpleAudioVolume.muted = True
+        self.make([self.session])
+        self.controller.scan_once()
+        self.restore_on_exit = False
+        self.controller._restore_all()
+        self.assertTrue(self.session.SimpleAudioVolume.muted)
 
 
 if __name__ == "__main__":

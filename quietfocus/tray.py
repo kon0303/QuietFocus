@@ -54,7 +54,7 @@ class TrayManager:
                 pystray.MenuItem(self._status_text, None, enabled=False),
                 pystray.Menu.SEPARATOR,
                 pystray.MenuItem("设置…", self._settings),
-                pystray.MenuItem("退出", self._quit),
+                pystray.MenuItem("退出并恢复声音", self._quit),
             )
             icon = pystray.Icon(
                 "QuietFocus",

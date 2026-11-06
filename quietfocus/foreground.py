@@ -43,13 +43,16 @@ _TRANSIENT_CLASSES = {
     "XamlExplorerHostIslandWindow",
 }
 _SHELL_PROCESSES = {
+    # Quick settings / volume / network flyouts are transient overlays.
     "explorer.exe",
     "shellexperiencehost.exe",
-    "startmenuexperiencehost.exe",
-    "searchhost.exe",
+    # The IME candidate window should not count as leaving the app.
     "textinputhost.exe",
     "lockapp.exe",
 }
+# StartMenuExperienceHost.exe and SearchHost.exe are intentionally NOT in this
+# set: opening the Start menu or search means the previous app is no longer
+# foreground and should be muted.
 
 
 @dataclass(frozen=True)

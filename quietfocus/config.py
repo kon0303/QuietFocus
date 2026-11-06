@@ -37,6 +37,7 @@ class Settings:
         self.start_minimized = False
         self.tray_hint_shown = False
         self.auto_select_new = True
+        self.restore_on_exit = True
         self.apps: dict[str, dict[str, str]] = {}
         self.ignored: set[str] = set()
         self._load()
@@ -65,6 +66,7 @@ class Settings:
         self.start_minimized = bool(data.get("start_minimized", False))
         self.tray_hint_shown = bool(data.get("tray_hint_shown", False))
         self.auto_select_new = bool(data.get("auto_select_new", True))
+        self.restore_on_exit = bool(data.get("restore_on_exit", True))
         ignored = data.get("ignored", [])
         if isinstance(ignored, list):
             self.ignored = {str(key) for key in ignored if isinstance(key, str)}
@@ -102,6 +104,7 @@ class Settings:
                 "start_minimized": bool(self.start_minimized),
                 "tray_hint_shown": bool(self.tray_hint_shown),
                 "auto_select_new": bool(self.auto_select_new),
+                "restore_on_exit": bool(self.restore_on_exit),
                 "ignored": sorted(self.ignored),
                 "apps": self.apps,
             }
@@ -232,6 +235,13 @@ class Settings:
             if self.auto_select_new == value:
                 return
             self.auto_select_new = value
+            self.save()
+
+    def set_restore_on_exit(self, value: bool) -> None:
+        with self._lock:
+            if self.restore_on_exit == value:
+                return
+            self.restore_on_exit = value
             self.save()
 
     def set_enabled(self, enabled: bool) -> None:

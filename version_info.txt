@@ -1,7 +1,7 @@
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 1, 0),
-    prodvers=(1, 0, 1, 0),
+    filevers=(1, 0, 2, 0),
+    prodvers=(1, 0, 2, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -14,12 +14,12 @@ VSVersionInfo(
       StringTable('080404B0', [
         StringStruct('CompanyName', 'QuietFocus'),
         StringStruct('FileDescription', 'QuietFocus - Automatic Background Mute'),
-        StringStruct('FileVersion', '1.0.1.0'),
+        StringStruct('FileVersion', '1.0.2.0'),
         StringStruct('InternalName', 'QuietFocus'),
         StringStruct('LegalCopyright', 'Copyright (c) 2026 QuietFocus'),
         StringStruct('OriginalFilename', 'QuietFocus.exe'),
         StringStruct('ProductName', 'QuietFocus'),
-        StringStruct('ProductVersion', '1.0.1.0')
+        StringStruct('ProductVersion', '1.0.2.0')
       ])
     ]),
     VarFileInfo([VarStruct('Translation', [2052, 1200])])

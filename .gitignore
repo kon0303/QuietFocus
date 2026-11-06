@@ -10,6 +10,7 @@ dist/
 .data-*/
 .test-tmp/
 .tmp/
+.pyi/
 .launcher-test*/
 launcher/obj/
 
@@ -27,3 +28,5 @@ launcher/obj/
 /desktop_now.png
 /tray_crop.png
 /header_crop*.png
+
+.blob_entries.json
